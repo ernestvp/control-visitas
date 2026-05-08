@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -y \
     nginx \
     && docker-php-ext-install pdo pdo_mysql mysqli zip intl
 
-# Configuración de nginx
 RUN echo 'server { \
     listen 80; \
     root /var/www/html/public; \
@@ -27,4 +26,5 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-CMD service nginx start && php-fpm
+EXPOSE 80
+CMD service nginx start && php-fpm -F
