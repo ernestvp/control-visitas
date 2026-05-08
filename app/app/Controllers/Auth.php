@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\UsuarioModel;
+
+class Auth extends BaseController
+{
+    public function login()
+    {
+        // Si ya está logueado, redirige al inicio
+        if (session()->get('logueado')) {
+            return redirect()->to('/visitas');
+        }
+        return view('auth/login');
+    }
+
+    public function loginPost()
+    {
+        $usuario = $this->request->getPost('usuario');
+        $password = $this->request->getPost('password');
+
+        $model = new UsuarioModel();
+        $user = $model->where('usuario', $usuario)->first();
+
+        // Comprobamos usuario y contraseña
+        if ($user && password_verify($password, $user['password'])) {
+            session()->set([
+                'logueado' => true,
+                'usuario'  => $user['usuario'],
+            ]);
+            return redirect()->to('/visitas');
+        }
+
+        return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/login');
+    }
+}

@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Servidor PHP con Apache
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: control_visitas_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=usuario
+      - DB_PASS=password
+      - DB_NAME=control_visitas
+
+  # Base de datos MySQL
+  db:
+    image: mysql:8.0
+    container_name: control_visitas_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: control_visitas
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # PhpMyAdmin para ver la base de datos visualmente
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: control_visitas_pma
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+
+volumes:
+  db_data:
