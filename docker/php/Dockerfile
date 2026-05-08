@@ -1,8 +1,4 @@
-FROM php:8.2-apache
-
-# Desactivamos módulos MPM conflictivos antes de instalar nada
-RUN a2dismod mpm_event mpm_worker 2>/dev/null || true \
-    && a2enmod mpm_prefork
+FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
     libzip-dev \
@@ -10,16 +6,25 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     curl \
+    nginx \
     && docker-php-ext-install pdo pdo_mysql mysqli zip intl
 
-RUN a2enmod rewrite
+# Configuración de nginx
+RUN echo 'server { \
+    listen 80; \
+    root /var/www/html/public; \
+    index index.php; \
+    location / { try_files $uri $uri/ /index.php?$query_string; } \
+    location ~ \.php$ { \
+        fastcgi_pass 127.0.0.1:9000; \
+        fastcgi_index index.php; \
+        include fastcgi_params; \
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
+    } \
+}' > /etc/nginx/sites-available/default
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' \
-    /etc/apache2/sites-available/000-default.conf
-
-RUN sed -i 's|AllowOverride None|AllowOverride All|g' \
-    /etc/apache2/apache2.conf
-
 WORKDIR /var/www/html
+
+CMD service nginx start && php-fpm
