@@ -190,10 +190,10 @@ class Database extends Config
     // Sobreescribimos con variables de entorno si existen (Railway)
     if (isset($_ENV['DB_HOST'])) {
         $this->default['hostname'] = $_ENV['DB_HOST'];
-        $this->default['username'] = $_ENV['DB_USERNAME'];
-        $this->default['password'] = $_ENV['DB_PASSWORD'];
-        $this->default['database'] = $_ENV['DB_DATABASE'];
-        $this->default['port']     = (int)$_ENV['DB_PORT'];
+        $this->default['username'] = $_ENV['MYSQLUSER'] ?? $_ENV['DB_USERNAME'] ?? 'usuario';
+        $this->default['password'] = $_ENV['MYSQLPASSWORD'] ?? $_ENV['DB_PASSWORD'] ?? 'password';
+        $this->default['database'] = $_ENV['MYSQLDATABASE'] ?? $_ENV['DB_DATABASE'] ?? 'control_visitas';
+        $this->default['port']     = (int)($_ENV['MYSQLPORT'] ?? $_ENV['DB_PORT'] ?? 3306);
     }
 
     if (ENVIRONMENT === 'testing') {
