@@ -37,4 +37,7 @@ RUN echo 'server { \
 }' > /etc/nginx/sites-available/default
 
 EXPOSE 80
-CMD service nginx start && php-fpm -F
+# Script de inicio que ejecuta migraciones y arranca los servicios
+RUN echo '#!/bin/bash\nphp spark migrate --force\nservice nginx start\nphp-fpm -F' > /start.sh && chmod +x /start.sh
+
+CMD ["/bin/bash", "/start.sh"]
