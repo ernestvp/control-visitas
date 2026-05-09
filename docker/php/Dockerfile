@@ -25,7 +25,7 @@ RUN chmod -R 777 writable
 # Configuración nginx
 RUN echo 'server { \
     listen 80; \
-    root /var/www/html/app/public; \
+    root /var/www/html/public; \
     index index.php; \
     location / { try_files $uri $uri/ /index.php?$query_string; } \
     location ~ \.php$ { \
