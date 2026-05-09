@@ -26,10 +26,10 @@ class Database extends Config
      */
     public array $default = [
     'DSN'          => '',
-    'hostname'     => $_ENV['DB_HOST'] ?? 'db',
-    'username'     => $_ENV['DB_USERNAME'] ?? 'usuario',
-    'password'     => $_ENV['DB_PASSWORD'] ?? 'password',
-    'database'     => $_ENV['DB_DATABASE'] ?? 'control_visitas',
+    'hostname'     => 'db',
+    'username'     => 'usuario',
+    'password'     => 'password',
+    'database'     => 'control_visitas',
     'DBDriver'     => 'MySQLi',
     'DBPrefix'     => '',
     'pConnect'     => false,
@@ -41,7 +41,7 @@ class Database extends Config
     'compress'     => false,
     'strictOn'     => false,
     'failover'     => [],
-    'port'         => (int)($_ENV['DB_PORT'] ?? 3306),
+    'port'         => 3306,
 ];
 
     //    /**
@@ -184,14 +184,20 @@ class Database extends Config
     ];
 
     public function __construct()
-    {
-        parent::__construct();
+{
+    parent::__construct();
 
-        // Ensure that we always set the database group to 'tests' if
-        // we are currently running an automated test suite, so that
-        // we don't overwrite live data on accident.
-        if (ENVIRONMENT === 'testing') {
-            $this->defaultGroup = 'tests';
-        }
+    // Sobreescribimos con variables de entorno si existen (Railway)
+    if (isset($_ENV['DB_HOST'])) {
+        $this->default['hostname'] = $_ENV['DB_HOST'];
+        $this->default['username'] = $_ENV['DB_USERNAME'];
+        $this->default['password'] = $_ENV['DB_PASSWORD'];
+        $this->default['database'] = $_ENV['DB_DATABASE'];
+        $this->default['port']     = (int)$_ENV['DB_PORT'];
     }
+
+    if (ENVIRONMENT === 'testing') {
+        $this->defaultGroup = 'tests';
+    }
+}
 }
