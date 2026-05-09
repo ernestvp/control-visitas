@@ -8,12 +8,12 @@ class Visitas extends BaseController
 {
     // Comprobamos en cada método si está logueado
     protected function checkLogin()
-    {
-        if (!session()->get('logueado')) {
-            return redirect()->to('/login');
-        }
-        return null;
+{
+    if (!session()->get('logueado')) {
+        return redirect()->to(base_url('login'));
     }
+    return null;
+}
 
     public function index()
     {

@@ -16,24 +16,22 @@ class Auth extends BaseController
     }
 
     public function loginPost()
-    {
-        $usuario = $this->request->getPost('usuario');
-        $password = $this->request->getPost('password');
+{
+    $usuario = $this->request->getPost('usuario');
+    $password = $this->request->getPost('password');
 
-        $model = new UsuarioModel();
-        $user = $model->where('usuario', $usuario)->first();
+    $model = new UsuarioModel();
+    $user = $model->where('usuario', $usuario)->first();
 
-        // Comprobamos usuario y contraseña
-        if ($user && password_verify($password, $user['password'])) {
-            session()->set([
-                'logueado' => true,
-                'usuario'  => $user['usuario'],
-            ]);
-            return redirect()->to('/visitas');
-        }
-
-        return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
+    if ($user && password_verify($password, $user['password'])) {
+        session()->set('logueado', true);
+        session()->set('usuario', $user['usuario']);
+        session()->markAsTempdata('logueado', 3600);
+        return redirect()->to(base_url('visitas'));
     }
+
+    return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
+}
 
     public function logout()
     {
