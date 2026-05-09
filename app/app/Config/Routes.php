@@ -18,3 +18,4 @@ $routes->get('/visitas', 'Visitas::index');
 $routes->get('/visitas/registro', 'Visitas::registro');
 $routes->post('/visitas/registro', 'Visitas::registroPost');
 $routes->get('/visitas/salida/(:num)', 'Visitas::salida/$1');
+$routes->get('/setup', 'Auth::setup');

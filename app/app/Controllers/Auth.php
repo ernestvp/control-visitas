@@ -40,4 +40,11 @@ class Auth extends BaseController
         session()->destroy();
         return redirect()->to('/login');
     }
+    public function setup()
+{
+    $model = new UsuarioModel();
+    $hash = password_hash('admin123', PASSWORD_DEFAULT);
+    $model->insert(['usuario' => 'admin', 'password' => $hash]);
+    echo 'Usuario creado: admin / admin123';
+}
 }
