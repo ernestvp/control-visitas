@@ -43,8 +43,8 @@
 
         .container {
             max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            margin: 20px auto;
+            padding: 0 20px 10px 20px;
         }
 
         .card {
@@ -52,7 +52,7 @@
             border-radius: 8px;
             padding: 25px 30px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .card h2 {
