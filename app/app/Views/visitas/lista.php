@@ -4,7 +4,6 @@
 <div class="card">
     <h2>Registro de Visitas</h2>
 
-    <!-- Filtros de búsqueda -->
     <form method="GET" action="/visitas" style="display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap; align-items:flex-end;">
         <div class="form-group" style="flex:1; min-width:180px; margin-bottom:0;">
             <label>Buscar por nombre</label>
@@ -71,11 +70,9 @@
             </tbody>
         </table>
 
-        <!-- Paginación -->
         <?php if ($totalPaginas > 1): ?>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px;">
 
-            <!-- Izquierda: Anterior -->
             <div style="flex:1; display:flex; justify-content:flex-start;">
                 <?php if ($paginaActual > 1): ?>
                     <a href="/visitas?pagina=<?= $paginaActual - 1 ?>&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
@@ -85,7 +82,6 @@
                 <?php endif; ?>
             </div>
 
-            <!-- Centro: Números de página -->
             <div style="flex:1; display:flex; justify-content:center; gap:5px;">
                 <?php
                 $inicio = max(1, $paginaActual - 2);
@@ -99,7 +95,6 @@
                 <?php endfor; ?>
             </div>
 
-            <!-- Derecha: Página X de Y + Siguiente -->
             <div style="flex:1; display:flex; justify-content:flex-end; align-items:center; gap:10px;">
                 <span style="font-size:12px; color:#999;">Pagina <?= $paginaActual ?> de <?= $totalPaginas ?></span>
                 <?php if ($paginaActual < $totalPaginas): ?>
