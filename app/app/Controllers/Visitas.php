@@ -16,28 +16,38 @@ class Visitas extends BaseController
 }
 
     public function index()
-    {
-        $check = $this->checkLogin();
-        if ($check) return $check;
+{
+    $check = $this->checkLogin();
+    if ($check) return $check;
 
-        $model = new VisitaModel();
+    $model = new VisitaModel();
+    $fecha  = $this->request->getGet('fecha');
+    $nombre = $this->request->getGet('nombre');
+    $pagina = (int)($this->request->getGet('pagina') ?? 1);
+    $porPagina = 10;
 
-        // Recogemos filtros del formulario de búsqueda
-        $fecha    = $this->request->getGet('fecha');
-        $nombre   = $this->request->getGet('nombre');
+    $builder = $model->orderBy('entrada', 'DESC');
 
-        $builder = $model->orderBy('entrada', 'DESC');
-
-        if ($fecha) {
-            $builder->where('DATE(entrada)', $fecha);
-        }
-        if ($nombre) {
-            $builder->like('nombre', $nombre);
-        }
-
-        $data['visitas'] = $builder->findAll();
-        return view('visitas/lista', $data);
+    if ($fecha) {
+        $builder->where('DATE(entrada)', $fecha);
     }
+    if ($nombre) {
+        $builder->like('nombre', $nombre);
+    }
+
+    // Total para calcular páginas
+    $total = $builder->countAllResults(false);
+    $totalPaginas = ceil($total / $porPagina);
+    $offset = ($pagina - 1) * $porPagina;
+
+    $data['visitas']      = $builder->findAll($porPagina, $offset);
+    $data['totalPaginas'] = $totalPaginas;
+    $data['paginaActual'] = $pagina;
+    $data['nombre']       = $nombre;
+    $data['fecha']        = $fecha;
+
+    return view('visitas/lista', $data);
+}
 
     public function registro()
     {

@@ -12,11 +12,12 @@
         </div>
         <div class="form-group" style="flex:1; min-width:180px;">
             <label>Filtrar por fecha</label>
-            <input type="date" name="fecha" value="<?= esc($fecha ?? '') ?>">
+            <!-- max evita seleccionar fechas futuras -->
+            <input type="date" name="fecha" value="<?= esc($fecha ?? '') ?>" max="<?= date('Y-m-d') ?>">
         </div>
         <div style="display:flex; align-items:flex-end; gap:10px;">
             <button type="submit" class="btn btn-primary">Buscar</button>
-            <a href="/visitas" class="btn btn-secondary">Limpiar</a>
+            <a href="/visitas" class="btn btn-secondary">Limpiar filtros</a>
         </div>
     </form>
 
@@ -68,6 +69,19 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Paginación -->
+        <?php if ($totalPaginas > 1): ?>
+        <div style="display:flex; justify-content:center; gap:8px; margin-top:20px;">
+            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                <a href="/visitas?pagina=<?= $i ?>&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
+                   class="btn <?= $i === $paginaActual ? 'btn-primary' : 'btn-secondary' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+        <?php endif; ?>
+
     <?php endif; ?>
 </div>
 
