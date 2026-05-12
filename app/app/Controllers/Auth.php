@@ -32,11 +32,11 @@ class Auth extends BaseController
     }
 
     public function logout()
-    {
-        $this->response->deleteCookie('logueado');
-        $this->response->deleteCookie('usuario');
-        return redirect()->to('/login');
-    }
+{
+    setcookie('logueado', '', time() - 3600, '/');
+    setcookie('usuario', '', time() - 3600, '/');
+    return redirect()->to('/login');
+}
     /*public function setup()
 {
     $model = new UsuarioModel();
