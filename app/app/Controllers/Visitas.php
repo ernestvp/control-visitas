@@ -9,7 +9,7 @@ class Visitas extends BaseController
     // Comprobamos en cada método si está logueado
     protected function checkLogin()
 {
-    if ($this->request->getCookie('logueado') !== 'si') {
+    if (!$this->request->getCookie('logueado')) {
         return redirect()->to('/login');
     }
     return null;

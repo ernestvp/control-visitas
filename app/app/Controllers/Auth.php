@@ -23,11 +23,10 @@ class Auth extends BaseController
         $user = $model->where('usuario', $usuario)->first();
 
         if ($user && password_verify($password, $user['password'])) {
-            $response = $this->response;
-            $response->setCookie('logueado', 'si', 7200);
-            $response->setCookie('usuario', $user['usuario'], 7200);
-            return redirect()->to('/visitas');
-        }
+    setcookie('logueado', 'si', time() + 7200, '/', '', false, false);
+    setcookie('usuario', $user['usuario'], time() + 7200, '/', '', false, false);
+    return redirect()->to('/visitas');
+}
 
         return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
     }
