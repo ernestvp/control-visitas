@@ -38,4 +38,12 @@ class Auth extends BaseController
         $this->response->deleteCookie('usuario');
         return redirect()->to('/login');
     }
+    public function setup()
+{
+    $model = new UsuarioModel();
+    $model->where('usuario', 'admin')->delete();
+    $hash = password_hash('admin123', PASSWORD_DEFAULT);
+    $model->insert(['usuario' => 'admin', 'password' => $hash]);
+    echo 'Listo: admin / admin123 - Hash: ' . $hash;
+}
 }
