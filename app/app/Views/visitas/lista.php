@@ -72,13 +72,37 @@
 
         <!-- Paginación -->
         <?php if ($totalPaginas > 1): ?>
-        <div style="display:flex; justify-content:center; gap:8px; margin-top:20px;">
-            <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+        <div style="display:flex; justify-content:center; gap:6px; margin-top:20px; flex-wrap:wrap;">
+
+            <?php if ($paginaActual > 1): ?>
+                <a href="/visitas?pagina=1&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
+                   class="btn btn-secondary">« Primera</a>
+                <a href="/visitas?pagina=<?= $paginaActual - 1 ?>&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
+                   class="btn btn-secondary">‹ Anterior</a>
+            <?php endif; ?>
+
+            <?php
+            $inicio = max(1, $paginaActual - 2);
+            $fin    = min($totalPaginas, $paginaActual + 2);
+            for ($i = $inicio; $i <= $fin; $i++):
+            ?>
                 <a href="/visitas?pagina=<?= $i ?>&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
                    class="btn <?= $i === $paginaActual ? 'btn-primary' : 'btn-secondary' ?>">
                     <?= $i ?>
                 </a>
             <?php endfor; ?>
+
+            <?php if ($paginaActual < $totalPaginas): ?>
+                <a href="/visitas?pagina=<?= $paginaActual + 1 ?>&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
+                   class="btn btn-secondary">Siguiente ›</a>
+                <a href="/visitas?pagina=<?= $totalPaginas ?>&nombre=<?= esc($nombre ?? '') ?>&fecha=<?= esc($fecha ?? '') ?>"
+                   class="btn btn-secondary">Última »</a>
+            <?php endif; ?>
+
+            <span style="display:flex; align-items:center; font-size:13px; color:#999; margin-left:10px;">
+                Página <?= $paginaActual ?> de <?= $totalPaginas ?>
+            </span>
+
         </div>
         <?php endif; ?>
 
