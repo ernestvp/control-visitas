@@ -8,41 +8,34 @@ class Auth extends BaseController
 {
     public function login()
     {
-        // Si ya está logueado, redirige al inicio
-        if (session()->get('logueado')) {
+        if ($this->request->getCookie('logueado') === 'si') {
             return redirect()->to('/visitas');
         }
         return view('auth/login');
     }
 
     public function loginPost()
-{
-    $usuario = $this->request->getPost('usuario');
-    $password = $this->request->getPost('password');
+    {
+        $usuario = $this->request->getPost('usuario');
+        $password = $this->request->getPost('password');
 
-    $model = new UsuarioModel();
-    $user = $model->where('usuario', $usuario)->first();
+        $model = new UsuarioModel();
+        $user = $model->where('usuario', $usuario)->first();
 
-    if ($user && password_verify($password, $user['password'])) {
-        session()->set('logueado', true);
-        session()->set('usuario', $user['usuario']);
-        session()->markAsTempdata('logueado', 3600);
-        return redirect()->to(base_url('visitas'));
+        if ($user && password_verify($password, $user['password'])) {
+            $response = $this->response;
+            $response->setCookie('logueado', 'si', 7200);
+            $response->setCookie('usuario', $user['usuario'], 7200);
+            return redirect()->to('/visitas');
+        }
+
+        return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
     }
-
-    return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
-}
 
     public function logout()
     {
-        session()->destroy();
+        $this->response->deleteCookie('logueado');
+        $this->response->deleteCookie('usuario');
         return redirect()->to('/login');
     }
-    public function setup()
-{
-    $model = new UsuarioModel();
-    $hash = password_hash('admin123', PASSWORD_DEFAULT);
-    $model->insert(['usuario' => 'admin', 'password' => $hash]);
-    echo 'Usuario creado: admin / admin123';
-}
 }
