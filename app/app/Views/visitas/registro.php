@@ -2,7 +2,7 @@
 <?= $this->section('contenido') ?>
 
 <div class="card">
-    <h2>📋 Registro de Visitante</h2>
+    <h2>Registro de Visitante</h2>
 
     <form action="/visitas/registro" method="POST">
         <?= csrf_field() ?>

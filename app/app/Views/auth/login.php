@@ -68,7 +68,7 @@
 </head>
 <body>
     <div class="login-box">
-        <h2>🏢 Control de <span>Visitas</span></h2>
+        <h2>Control de <span>Visitas</span></h2>
 
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert"><?= session()->getFlashdata('error') ?></div>
